@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>ChafaBux Café</title>
+    <style>
+      body { background-color: #f8f4f0; }
+      .navbar-brand { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: bold; }
+      .card { border: none; border-radius: 1rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+      .card-img-top { border-radius: 1rem 1rem 0 0; height: 180px; object-fit: cover; }
+      .btn-primary { background-color: #6f4e37; border-color: #6f4e37; }
+      .btn-primary:hover { background-color: #5a3b2a; border-color: #5a3b2a; }
+      .navbar-nav .nav-link.active, .navbar-nav .nav-link:focus { font-weight: bold; color: #6f4e37 !important; }
+      .profile-pic {
+        width: 32px; height: 32px; object-fit: cover; border-radius: 50%; border: 2px solid #6f4e37; margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'inicio' %}"><i class="fa-solid fa-mug-hot"></i> ChafaBux</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContenido" aria-controls="navbarContenido" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContenido">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'inicio' %}"><i class="fa-solid fa-house"></i> Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'ver_carrito' %}"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+            </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'historial' %}"><i class="fa-solid fa-receipt"></i> Historial</a>
+              </li>
+              {% if user.is_superuser %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'agregar_producto' %}"><i class="fa-solid fa-plus"></i> Agregar Producto</a>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {% if user.perfil.foto %}
+                    <img src="{{ user.perfil.foto.url }}" class="profile-pic" alt="Foto de perfil">
+                  {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ user.username }}" class="profile-pic" alt="Sin foto">
+                  {% endif %}
+                  {{ user.username }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'perfil_usuario' %}"><i class="fa-solid fa-user"></i> Mi Perfil</a></li>
+                  <li><a class="dropdown-item" href="{% url 'editar_foto_perfil' %}"><i class="fa-solid fa-image"></i> Cambiar foto</a></li>
+                  <li><a class="dropdown-item" href="{% url 'password_change' %}"><i class="fa-solid fa-key"></i> Cambiar contraseña</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <form method="post" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="dropdown-item text-danger"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+                    </form>
+                  </li>
+                </ul>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}"><i class="fa-solid fa-user-plus"></i> Registrarse</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (incluye Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FontAwesome JS (opcional, para iconos interactivos) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  </body>
+</html>

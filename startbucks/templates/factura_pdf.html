@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Factura #{{ compra.id }}</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #222; }
+    .factura-header { border-bottom: 2px solid #6f4e37; margin-bottom: 20px; padding-bottom: 10px; }
+    .factura-header h2 { color: #6f4e37; margin: 0; }
+    .factura-info { margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #bbb; padding: 8px; text-align: left; }
+    th { background: #f3e9e2; color: #6f4e37; }
+    tr:nth-child(even) { background: #f9f6f2; }
+    h3 { text-align: right; color: #388e3c; margin-top: 30px; }
+    .total-row td { font-weight: bold; color: #388e3c; }
+  </style>
+</head>
+<body>
+  <div class="factura-header">
+    <h2>Factura #{{ compra.id }}</h2>
+  </div>
+  <div class="factura-info">
+    <p><strong>Cliente:</strong> {{ compra.usuario.username }}</p>
+    <p><strong>Fecha:</strong> {{ compra.fecha|date:"d/m/Y H:i" }}</p>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.precio_unitario|floatformat:2 }}</td>
+        <td>${{ item.subtotal|floatformat:2 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h3>Total: ${{ total|floatformat:2 }}</h3>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <div class="alert alert-warning text-center shadow" role="alert">
+    <div class="mb-3">
+      <i class="fa-solid fa-triangle-exclamation fa-3x text-warning"></i>
+    </div>
+    <h4 class="alert-heading mb-2">Pago cancelado</h4>
+    <p>Tu pago fue cancelado o no pudo completarse.<br>
+    Si fue un error, puedes intentarlo de nuevo.</p>
+    <hr>
+    <a href="{% url 'ver_carrito' %}" class="btn btn-outline-secondary">
+      <i class="fa-solid fa-arrow-left"></i> Volver al carrito
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 600px;">
+  <div class="card shadow">
+    <div class="card-body">
+      <h3>{{ producto.nombre }}</h3>
+      <p>{{ producto.descripcion }}</p>
+      <p><strong>Precio:</strong> ${{ producto.precio|floatformat:2 }}</p>
+      <hr>
+      <h5>Valorar este producto:</h5>
+      {% if user.is_authenticated %}
+        <form method="post">
+          {% csrf_token %}
+          <label for="calificacion">Calificación:</label>
+          <select name="calificacion" id="calificacion" class="form-select mb-2" required>
+            <option value="">Selecciona</option>
+            {% for i in "12345" %}
+              <option value="{{ i }}">{{ i }} estrella{{ i|pluralize }}</option>
+            {% endfor %}
+          </select>
+          <textarea name="comentario" class="form-control mb-2" placeholder="Comentario"></textarea>
+          <button type="submit" class="btn btn-success">Enviar valoración</button>
+        </form>
+      {% else %}
+        <p><a href="{% url 'login' %}">Inicia sesión</a> para valorar.</p>
+      {% endif %}
+      <hr>
+      <h5>Valoraciones:</h5>
+      {% for v in valoraciones %}
+        <div class="mb-2">
+          <strong>{{ v.usuario.username }}</strong>
+          {% for i in "12345"|make_list %}
+            {% if forloop.counter <= v.calificacion %}
+              <span style="color:gold;">&#9733;</span>
+            {% else %}
+              <span style="color:lightgray;">&#9733;</span>
+            {% endif %}
+          {% endfor %}
+          <br>
+          <small>{{ v.fecha|date:"d/m/Y H:i" }}</small><br>
+          <em>{{ v.comentario }}</em>
+        </div>
+      {% empty %}
+        <p>No hay valoraciones aún.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

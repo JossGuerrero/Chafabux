@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <div class="alert alert-success text-center shadow" role="alert">
+    <div class="mb-3">
+      <i class="fa-solid fa-circle-check fa-3x text-success"></i>
+    </div>
+    <h4 class="alert-heading mb-2">¡Pago exitoso!</h4>
+    <p>Gracias por tu compra. Tu pago fue procesado correctamente.<br>
+    Pronto recibirás un correo con los detalles de tu pedido.</p>
+    <hr>
+    <a href="{% url 'inicio' %}" class="btn btn-success">
+      <i class="fa-solid fa-house"></i> Volver al inicio
+    </a>
+    <a href="{% url 'historial' %}" class="btn btn-outline-primary ms-2">
+      <i class="fa-solid fa-receipt"></i> Ver historial de compras
+    </a>
+  </div>
+</div>
+{% endblock %}

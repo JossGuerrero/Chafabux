@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fa-solid fa-cart-shopping"></i> Tu Carrito</h2>
+<div class="table-responsive">
+  <table class="table align-middle table-bordered shadow-sm">
+    <thead class="table-light">
+      <tr>
+        <th>Producto</th>
+        <th style="width: 180px;">Cantidad</th>
+        <th>Subtotal</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>
+          <strong>{{ item.producto.nombre }}</strong>
+        </td>
+        <td>
+          <form method="post" action="{% url 'modificar_cantidad' item.id %}" class="d-inline-flex align-items-center">
+            {% csrf_token %}
+            <button type="submit" name="accion" value="menos" class="btn btn-sm btn-outline-secondary px-2">−</button>
+            <span class="mx-2">{{ item.cantidad }}</span>
+            <button type="submit" name="accion" value="mas" class="btn btn-sm btn-outline-secondary px-2">+</button>
+          </form>
+        </td>
+        <td>
+          ${{ item.producto.precio|floatformat:2 }} x {{ item.cantidad }} = 
+          <strong>${{ item.producto.precio|floatformat:2|floatformat:2|add:"0"|floatformat:2|add:"0"|floatformat:2 }}</strong>
+        </td>
+        <td>
+          <form method="post" action="{% url 'modificar_cantidad' item.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" name="accion" value="eliminar" class="btn btn-sm btn-danger">
+              <i class="fa-solid fa-trash"></i> Eliminar
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-muted">Tu carrito está vacío.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mt-4">
+  <h4>Total: <span class="text-success">${{ total|floatformat:2 }}</span></h4>
+  {% if items %}
+    <a href="{% url 'pagar' %}" class="btn btn-success btn-lg">
+      <i class="fa-brands fa-paypal"></i> Pagar con PayPal
+    </a>
+  {% else %}
+    <span class="text-muted">Agrega productos para poder pagar.</span>
+  {% endif %}
+</div>
+{% endblock %}
